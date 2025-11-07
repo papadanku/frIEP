@@ -1,9 +1,8 @@
-
 /** @OnlyCurrentDoc */
 
 function bascProcessCells(spreadsheet, scaleRange, validitiyRange, pasteScales, pasteValidity) {
   // Start processing the scale scores
-  var scaleValues = spreadsheet.getRange(scaleRange);
+  let scaleValues = spreadsheet.getRange(scaleRange);
   spreadsheet.getRange(pasteScales).activate();
 
   // Move scale scores from the copy box to the target table
@@ -11,7 +10,7 @@ function bascProcessCells(spreadsheet, scaleRange, validitiyRange, pasteScales, 
   scaleValues.clearContent();
 
   // Start processing the validity scores
-  var validityValues = spreadsheet.getRange(validitiyRange);
+  let validityValues = spreadsheet.getRange(validitiyRange);
   spreadsheet.getRange(pasteValidity).activate();
 
   // Move validity scores from the copy box to the target table
@@ -21,7 +20,7 @@ function bascProcessCells(spreadsheet, scaleRange, validitiyRange, pasteScales, 
 
 function bascMarkScores(spreadsheet, contentScaleRange, adaptiveScaleRange) {
   // Process Content scales
-  var contentCells = spreadsheet.getRange(contentScaleRange);
+  let contentCells = spreadsheet.getRange(contentScaleRange);
 
   // Find-Replace At-Risk scores (Use ^ and $ for full cell match)
   // Matches exactly 60 through 69
@@ -32,7 +31,7 @@ function bascMarkScores(spreadsheet, contentScaleRange, adaptiveScaleRange) {
   findAndReplace(contentCells, '(\\d{3,}|[7-9]\\d)', '$1**');
 
   // Process Adaptive scales
-  var adaptiveCells = spreadsheet.getRange(adaptiveScaleRange);
+  let adaptiveCells = spreadsheet.getRange(adaptiveScaleRange);
 
   // Find-Replace At-Risk scores (Use ^ and $)
   // Matches exactly 40 or 30 through 39

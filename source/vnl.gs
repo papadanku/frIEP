@@ -1,6 +1,6 @@
 
 function vnlMarkScores(spreadsheet, cellRange, moderatelyLowSearch, lowSearch) {
-  var cells = spreadsheet.getRange(cellRange);
+  let cells = spreadsheet.getRange(cellRange);
 
   // Moderately Low
   findAndReplace(cells, moderatelyLowSearch, '$1*');

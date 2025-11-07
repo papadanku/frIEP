@@ -11,7 +11,7 @@ function connersMain() {
     ];
 
     for (const range of rangeArray) {
-      var selectedCells = spreadsheet.getRange(range);
+      let selectedCells = spreadsheet.getRange(range);
 
       // Find-Replace Slightly Elevated scores
       findAndReplace(selectedCells, '(6[0-4])', '$1*');

@@ -1,7 +1,7 @@
 
-# FrIEP ("Free IEP")
+# frIEP ("Free IEP")
 
-FrIEP consists of Google Apps Script files (`.gs`) designed to automate data processing and score marking within Google Sheets for psychological assessments. It includes scripts for ASRS, BASC-3, Conners 4, and Vineland 3 assessments, providing functions to move data between ranges and highlight scores based on clinical significance criteria using asterisks.
+frIEP consists of Google Apps Script files (`.gs`) designed to automate data processing and score marking within Google Sheets for psychological assessments. It includes scripts for ASRS, BASC-3, Conners 4, and Vineland 3 assessments, providing functions to move data between ranges and highlight scores based on clinical significance criteria using asterisks.
 
 ## Installation and Usage
 

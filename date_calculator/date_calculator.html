@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator</title>
+
+    <!-- All styling is now self-contained CSS, ensuring no external dependencies -->
+    <style>
+        /* System Font Stack for reliability */
+        :root {
+            --font-family-system: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            --color-primary: #1d4ed8; /* Strong Blue */
+            --color-primary-hover: #1e3a8a; /* Darker Blue */
+            --color-text-dark: #1f2937; /* Very Dark Gray/Black */
+            --color-text-medium: #4b5563; /* Medium Gray */
+            --color-background-light: #f9fafb; /* Off-White */
+            --color-neutral-border: #d1d5db; /* Light Gray Border */
+            --color-error-bg: #fee2e2;
+            --color-error-text: #b91c1c;
+            --color-tab-inactive: #e5e7eb;
+        }
+
+        /* Base styles */
+        body {
+            background-color: var(--color-background-light);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            font-family: var(--font-family-system);
+            margin: 0;
+        }
+
+        /* Calculator Card Styling */
+        .calculator-card {
+            width: 100%;
+            max-width: 32rem;
+            background-color: white;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border-radius: 0.75rem;
+            padding: 2rem;
+        }
+
+        .title {
+            font-size: 1.875rem;
+            font-weight: 800;
+            color: var(--color-text-dark);
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--color-text-medium);
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Input specific styling */
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--color-text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        /* Select and Input (Text/Date/Number) Styling */
+        input[type="date"], input[type="number"], select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-color: white;
+            border: 1px solid var(--color-neutral-border);
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            display: block;
+            width: 100%;
+            cursor: pointer;
+            box-sizing: border-box;
+            color: var(--color-text-dark);
+            font-family: var(--font-family-system);
+        }
+
+        input[type="date"]:focus, input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.5); /* Primary blue focus ring */
+        }
+
+        /* Flex layout for End Date and Button */
+        .flex-row {
+            display: flex;
+            gap: 0.75rem;
+        }
+        .flex-row input[type="date"] {
+            flex-grow: 1;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+
+        /* Set Today Button Styling */
+        #set-today-btn, #set-base-today-btn {
+            padding: 0.5rem 1rem;
+            background-color: var(--color-primary);
+            color: white;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: background-color 150ms ease-in-out;
+            white-space: nowrap;
+            font-size: 0.875rem;
+            align-self: stretch;
+            border: none;
+            cursor: pointer;
+            font-family: var(--font-family-system);
+        }
+        #set-today-btn:hover, #set-base-today-btn:hover {
+            background-color: var(--color-primary-hover);
+        }
+
+        /* Calculate Button Styling */
+        .calculate-btn {
+            width: 100%;
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+            background-color: var(--color-primary);
+            color: white;
+            font-weight: 700;
+            font-size: 1.125rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transition: all 150ms ease-in-out;
+            border: none;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            font-family: var(--font-family-system);
+        }
+        .calculate-btn:hover {
+            background-color: var(--color-primary-hover);
+            transform: scale(1.01);
+        }
+        .calculate-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.5); /* Primary blue focus ring */
+        }
+
+        /* --- Mode Tabs Styling --- */
+        #mode-tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 2rem;
+            padding: 0;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            border: 1px solid var(--color-neutral-border);
+        }
+        .mode-tab {
+            flex-grow: 1;
+            padding: 0.75rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--color-text-medium);
+            background-color: var(--color-tab-inactive);
+            transition: background-color 150ms, color 150ms;
+            border-right: 1px solid var(--color-neutral-border);
+        }
+        .mode-tab:last-child {
+            border-right: none;
+        }
+        .mode-tab.active {
+            color: white;
+            background-color: var(--color-primary);
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        /* --- End Mode Tabs Styling --- */
+
+        /* --- Result Section Styling --- */
+        .result-container {
+            margin-top: 1.5rem;
+            padding: 1.5rem; /* Slightly more padding */
+            background-color: white;
+            border: 1px solid var(--color-neutral-border);
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); /* Lighter shadow for modern feel */
+            text-align: center;
+        }
+
+        .result-title {
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 700; /* font-bold */
+            color: var(--color-text-dark);
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--color-neutral-border);
+            padding-bottom: 0.75rem;
+        }
+
+        /* Duration Mode Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            text-align: center;
+        }
+
+        .result-metric {
+            background-color: var(--color-background-light); /* Off-white block for contrast */
+            padding: 1rem 0.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--color-neutral-border);
+            transition: transform 0.2s;
+        }
+
+        .result-metric:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(29, 78, 216, 0.2);
+        }
+
+        .metric-value {
+            font-size: 1.75rem; /* Large number */
+            font-weight: 800; /* Extra bold */
+            color: var(--color-primary); /* Blue for the number */
+            line-height: 1;
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-label {
+            font-size: 0.75rem; /* Small label */
+            font-weight: 500;
+            color: var(--color-text-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Date Mode Output */
+        #new-date-output {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--color-primary);
+        }
+
+        /* Error Message Styling */
+        #error-message {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background-color: var(--color-error-bg);
+            color: var(--color-error-text);
+            border-radius: 0.5rem;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Calculator Card -->
+    <div id="app" class="calculator-card" data-mode="duration">
+        <h1 class="title">Date Utilities</h1>
+        <p class="subtitle">Calculate duration between dates or find a date in the future/past.</p>
+
+        <!-- Mode Switch Tabs -->
+        <div id="mode-tabs">
+            <div class="mode-tab active" data-mode="duration" id="tab-duration">Duration Calculator</div>
+            <div class="mode-tab" data-mode="date" id="tab-date">Date Arithmetic</div>
+        </div>
+
+        <!-- 1. Duration Mode Content (Original Feature) -->
+        <div id="duration-mode-content">
+            <!-- Input Section -->
+            <div class="space-y-4">
+                <!-- Start Date Input -->
+                <div class="input-group">
+                    <label for="start-date" class="input-label">Start Date (MM/DD/YYYY)</label>
+                    <input type="date" id="start-date">
+                </div>
+
+                <!-- End Date Input -->
+                <div class="input-group">
+                    <label for="end-date" class="input-label">End Date (MM/DD/YYYY)</label>
+                    <div class="flex-row">
+                        <input type="date" id="end-date">
+                        <button id="set-today-btn">Set Today</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calculate Button -->
+            <button id="calculate-duration-btn" class="calculate-btn">Calculate Duration</button>
+
+            <!-- Result Section -->
+            <div id="duration-result-container" class="result-container hidden">
+                <h2 class="result-title">Duration Found (Years, Months, Days)</h2>
+                <div id="duration-result-output">
+                    <!-- Metrics will be injected here by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Date Arithmetic Mode Content (New Feature) -->
+        <div id="date-mode-content" class="hidden">
+            <!-- Base Date Input -->
+            <div class="input-group">
+                <label for="base-date" class="input-label">Base Date</label>
+                <div class="flex-row">
+                    <input type="date" id="base-date">
+                    <button id="set-base-today-btn">Set Today</button>
+                </div>
+            </div>
+
+            <!-- Duration Input -->
+            <div class="input-group">
+                <label for="duration-amount" class="input-label">Duration</label>
+                <div class="grid-3">
+                    <input type="number" id="duration-amount" value="1" min="1">
+                    <select id="duration-unit">
+                        <option value="days">Days</option>
+                        <option value="weeks">Weeks</option>
+                        <option value="months">Months</option>
+                        <option value="years">Years</option>
+                    </select>
+                    <select id="direction">
+                        <option value="future">Into the Future</option>
+                        <option value="past">Into the Past</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Calculate Button -->
+            <button id="calculate-date-btn" class="calculate-btn">Find New Date</button>
+
+            <!-- Result Section -->
+            <div id="date-result-container" class="result-container hidden">
+                <h2 class="result-title">Resulting Date</h2>
+                <div id="new-date-output">
+                    <!-- New date will be injected here by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Message (shared) -->
+        <div id="error-message" class="hidden">
+            <!-- Error message will be injected here -->
+        </div>
+
+    </div>
+
+    <script type="module">
+        // --- DOM Elements ---
+        const appContainer = document.getElementById('app');
+        const durationModeContent = document.getElementById('duration-mode-content');
+        const dateModeContent = document.getElementById('date-mode-content');
+        const errorMessageDiv = document.getElementById('error-message');
+
+        // Duration Mode Elements
+        const startDateInput = document.getElementById('start-date');
+        const endDateInput = document.getElementById('end-date');
+        const setTodayBtn = document.getElementById('set-today-btn');
+        const calculateDurationBtn = document.getElementById('calculate-duration-btn');
+        const durationResultContainer = document.getElementById('duration-result-container');
+        const durationResultOutput = document.getElementById('duration-result-output');
+
+        // Date Arithmetic Mode Elements
+        const baseDateInput = document.getElementById('base-date');
+        const setBaseTodayBtn = document.getElementById('set-base-today-btn');
+        const amountInput = document.getElementById('duration-amount');
+        const unitSelect = document.getElementById('duration-unit');
+        const directionSelect = document.getElementById('direction');
+        const calculateDateBtn = document.getElementById('calculate-date-btn');
+        const dateResultContainer = document.getElementById('date-result-container');
+        const newDateOutput = document.getElementById('new-date-output');
+
+        // --- Utility Functions ---
+
+        /**
+         * Converts a Date object to a YYYY-MM-DD string format (required for date input value).
+         * @param {Date} date - The date object.
+         * @returns {string} Date string in YYYY-MM-DD format.
+         */
+        const formatDateForInput = (date) => {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
+
+        /**
+         * Converts a Date object to a user-friendly MM/DD/YYYY string format.
+         * @param {Date} date - The date object.
+         * @returns {string} Date string in MM/DD/YYYY format.
+         */
+        const formatDateForDisplay = (date) => {
+             const month = String(date.getMonth() + 1).padStart(2, '0');
+             const day = String(date.getDate()).padStart(2, '0');
+             const year = date.getFullYear();
+             return `${month}/${day}/${year}`;
+        }
+
+        /**
+         * Displays an error message in the dedicated UI element.
+         * @param {string} message - The error message to display.
+         */
+        const displayError = (message, mode) => {
+            errorMessageDiv.textContent = message;
+            errorMessageDiv.classList.remove('hidden');
+
+            // Hide results for the current mode
+            if (mode === 'duration') {
+                durationResultContainer.classList.add('hidden');
+            } else {
+                dateResultContainer.classList.add('hidden');
+            }
+        };
+
+        /**
+         * Hides the error message.
+         */
+        const clearError = () => {
+            errorMessageDiv.classList.add('hidden');
+            errorMessageDiv.textContent = '';
+        };
+
+        // --- Mode Switching Logic ---
+        document.querySelectorAll('.mode-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const mode = tab.getAttribute('data-mode');
+                toggleMode(mode);
+            });
+        });
+
+        const toggleMode = (mode) => {
+            clearError();
+
+            // Update tabs
+            document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(`tab-${mode}`).classList.add('active');
+
+            // Update content visibility
+            if (mode === 'duration') {
+                durationModeContent.classList.remove('hidden');
+                dateModeContent.classList.add('hidden');
+                dateResultContainer.classList.add('hidden');
+            } else {
+                durationModeContent.classList.add('hidden');
+                dateModeContent.classList.remove('hidden');
+                durationResultContainer.classList.add('hidden');
+            }
+            appContainer.setAttribute('data-mode', mode);
+        };
+
+
+        // --- Duration Calculation Logic (Original Feature) ---
+
+        /**
+         * Calculates the difference between two dates in years, months, and days.
+         * @param {Date} date1 - The earlier date (Start Date).
+         * @param {Date} date2 - The later date (End Date).
+         * @returns {{years: number, months: number, days: number}} The duration components.
+         */
+        const calculateDuration = (date1, date2) => {
+            let start = new Date(date1.getTime());
+            let end = new Date(date2.getTime());
+
+            // Determine if the calculation is forward or backward
+            const isReverse = start.getTime() > end.getTime();
+            if (isReverse) {
+                [start, end] = [end, start]; // Swap dates for calculation
+            }
+
+            let years = end.getFullYear() - start.getFullYear();
+            let months = end.getMonth() - start.getMonth();
+            let days = end.getDate() - start.getDate();
+
+            // Adjust days
+            if (days < 0) {
+                months--;
+                // Get the number of days in the previous month (month of end date)
+                // Setting day to 0 returns the last day of the previous month
+                const tempDate = new Date(end.getFullYear(), end.getMonth(), 0);
+                const daysInPrevMonth = tempDate.getDate();
+                days += daysInPrevMonth;
+            }
+
+            // Adjust months
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            // If the original calculation was in reverse, we still return the positive duration
+            return { years, months, days, isReverse };
+        };
+
+        /**
+         * Main function to handle the duration calculation when the button is pressed.
+         */
+        const handleDurationCalculation = () => {
+            clearError();
+
+            const startValue = startDateInput.value;
+            const endValue = endDateInput.value;
+
+            if (!startValue || !endValue) {
+                displayError("Please select both a Start Date and an End Date.", 'duration');
+                return;
+            }
+
+            const startDate = new Date(startValue);
+            const endDate = new Date(endValue);
+
+            // Check if dates are valid
+            if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+                displayError("Invalid date format detected.", 'duration');
+                return;
+            }
+
+            const duration = calculateDuration(startDate, endDate);
+
+            // Notify user if dates were swapped
+            if (duration.isReverse) {
+                displayError("Start Date is after End Date. The duration is calculated based on the absolute difference.", 'duration');
+            }
+
+            // Format the result using the new metric grid structure
+            const months = duration.months;
+            const days = duration.days;
+            const years = duration.years;
+
+            const metricsHtml = `
+                <div class="metrics-grid">
+                    <div class="result-metric">
+                        <div class="metric-value">${years}</div>
+                        <div class="metric-label">Years</div>
+                    </div>
+                    <div class="result-metric">
+                        <div class="metric-value">${months}</div>
+                        <div class="metric-label">Months</div>
+                    </div>
+                    <div class="result-metric">
+                        <div class="metric-value">${days}</div>
+                        <div class="metric-label">Days</div>
+                    </div>
+                </div>
+            `;
+
+            durationResultOutput.innerHTML = metricsHtml;
+            durationResultContainer.classList.remove('hidden');
+        };
+
+        // --- Date Arithmetic Logic (New Feature) ---
+
+        /**
+         * Calculates a date in the future or past by adding/subtracting a duration.
+         * @param {Date} baseDate - The starting date.
+         * @param {number} amount - The numeric value of the duration.
+         * @param {string} unit - 'days', 'weeks', 'months', or 'years'.
+         * @param {string} direction - 'future' or 'past'.
+         * @returns {Date} The resulting date.
+         */
+        const calculateNewDate = (baseDate, amount, unit, direction) => {
+            // Use a copy of the date to avoid modifying the original
+            let newDate = new Date(baseDate.getTime());
+            const multiplier = (direction === 'past') ? -1 : 1;
+
+            // Ensure amount is positive for manipulation
+            const absAmount = Math.abs(amount);
+
+            switch (unit) {
+                case 'days':
+                    newDate.setDate(newDate.getDate() + absAmount * multiplier);
+                    break;
+                case 'weeks':
+                    newDate.setDate(newDate.getDate() + absAmount * 7 * multiplier);
+                    break;
+                case 'months':
+                    // Store original day to handle month length differences (e.g., Feb 29/30/31)
+                    const originalDay = newDate.getDate();
+                    newDate.setMonth(newDate.getMonth() + absAmount * multiplier);
+
+                    // If the resulting month doesn't have the original day (e.g., starting on 31st, landing in a 30-day month)
+                    if (newDate.getDate() !== originalDay) {
+                        // Set it to the last day of the resulting month
+                        newDate.setDate(0);
+                    }
+                    break;
+                case 'years':
+                    newDate.setFullYear(newDate.getFullYear() + absAmount * multiplier);
+                    break;
+            }
+            return newDate;
+        };
+
+        /**
+         * Main function to handle the date arithmetic calculation.
+         */
+        const handleDateCalculation = () => {
+            clearError();
+
+            const baseValue = baseDateInput.value;
+            const amount = parseInt(amountInput.value, 10);
+            const unit = unitSelect.value;
+            const direction = directionSelect.value;
+
+            if (!baseValue) {
+                displayError("Please select a Base Date.", 'date');
+                return;
+            }
+            if (isNaN(amount) || amount <= 0) {
+                displayError("Please enter a positive duration amount.", 'date');
+                return;
+            }
+
+            const baseDate = new Date(baseValue);
+            if (isNaN(baseDate.getTime())) {
+                displayError("Invalid Base Date format detected.", 'date');
+                return;
+            }
+
+            const resultDate = calculateNewDate(baseDate, amount, unit, direction);
+
+            newDateOutput.textContent = formatDateForDisplay(resultDate);
+            dateResultContainer.classList.remove('hidden');
+        };
+
+        // --- Event Listeners and Initial Setup ---
+
+        // Duration Mode Listeners
+        setTodayBtn.addEventListener('click', () => {
+            const today = new Date();
+            endDateInput.value = formatDateForInput(today);
+            clearError();
+        });
+        calculateDurationBtn.addEventListener('click', handleDurationCalculation);
+
+        // Date Arithmetic Mode Listeners
+        setBaseTodayBtn.addEventListener('click', () => {
+            const today = new Date();
+            baseDateInput.value = formatDateForInput(today);
+            clearError();
+        });
+        calculateDateBtn.addEventListener('click', handleDateCalculation);
+
+
+        // Initial Setup (Run on load)
+        const today = new Date();
+        endDateInput.value = formatDateForInput(today); // Set Duration End Date to Today
+        baseDateInput.value = formatDateForInput(today); // Set Arithmetic Base Date to Today
+        startDateInput.value = ''; // Keep Duration Start Date blank (as requested)
+
+        toggleMode('duration'); // Start in Duration Mode
+
+    </script>
+</body>
+</html>

@@ -35,7 +35,7 @@ function bascMarkScores(spreadsheet, contentScaleRange, adaptiveScaleRange) {
 
   // Find-Replace At-Risk scores (Use ^ and $)
   // Matches exactly 40 or 30 through 39
-  findAndReplace(adaptiveCells, '(40|3\\d)', '$1*');
+  findAndReplace(adaptiveCells, '(40|3[1-9])', '$1*');
 
   // Find-Replace Clinically Significant scores (Use ^ and $)
   // Matches exactly 30 or 0-29

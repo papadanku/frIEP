@@ -1,6 +1,11 @@
 
 /** @OnlyCurrentDoc */
 
+/**
+ * Main function to process scores for the Conners 4 assessment.
+ * This function runs only on the "Conners 4 Table" sheet.
+ * It defines scoring rules and applies them to a specific range.
+ */
 function connersMain() {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   const sheetName = spreadsheet.getSheetName();

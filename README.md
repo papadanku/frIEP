@@ -30,7 +30,7 @@ To use these scripts, you add them directly to your Google Sheet project.
 * **Change Score Marking**: You can change how the scripts mark scores. They use regular expressions (like `(6[0-4])`) to find scores and add asterisks (`*`, `**`, `***`). You can edit these patterns to fit your needs.
 * **Change Shared Functions**: The `core.gs` file contains a `findAndReplace` function that all other scripts use. If you want to change how text is replaced across all scripts, edit this file.
 
-### Assessment Information
+## Assessment Information
 
 * **Autism Spectrum Rating Scales (ASRS)**
     * **Webpage**: https://www.pearsonassessments.com/en-us/Store/Professional-Assessments/Behavior/Autism-Spectrum-Rating-Scales/p/100000354

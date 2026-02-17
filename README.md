@@ -22,7 +22,7 @@ To use these scripts, you add them directly to your Google Sheet project.
 
 1. In your Google Sheet, go to **Extensions > Macros > Import Macro**.
 2. Add each function that ends with "Main" (like `asrsMain`, `eddtMain`, and `bascMain`).
-3. To make the macro easier to run, you can give it a custom name. For example, you can rename `eddtMain` to "EDDT | Process Scores".
+3. To make the macro easier to run, you can give it a custom name. For example, you can rename `eddtMain` to "EDDT \| Process Scores".
 
 ### How to Customize the Scripts
 
@@ -35,7 +35,7 @@ To use these scripts, you add them directly to your Google Sheet project.
 * **Autism Spectrum Rating Scales (ASRS)**
     * **Webpage**: https://www.pearsonassessments.com/en-us/Store/Professional-Assessments/Behavior/Autism-Spectrum-Rating-Scales/p/100000354
     * **Sample Report**: https://www.uvm.edu/d10-files/documents/2025-02/VCHIP_CHAMP_asd_del4d_asrs.pdf
-* **Behavior Assessment System for Children | Third Edition**
+* **Behavior Assessment System for Children \| Third Edition**
     * **Webpage**: https://www.pearsonassessments.com/en-us/Store/Professional-Assessments/Behavior/Behavior-Assessment-System-for-Children-%7C-Third-Edition-/p/100001402
     * **Sample Report**: https://www.pearsonassessments.com/content/dam/school/global/clinical/us/assets/basc-3/basc-3-rating-scales-report-sample.pdf
 * **Conners 4**
@@ -44,6 +44,6 @@ To use these scripts, you add them directly to your Google Sheet project.
 * **Emotional Disturbance Decision Tree (EDDT)**
     * **Webpage**: https://www.parinc.com/products/eddt-new
     * **Sample Report**: https://www.parinc.com/docs/default-source/product-resources/eddt-ir-sample.pdf?sfvrsn=2d1e8f85_3
-* **Vineland Adaptive Behavior Scales | Third Edition**
+* **Vineland Adaptive Behavior Scales \| Third Edition**
     * **Webpage**: https://www.pearsonassessments.com/en-us/Store/Professional-Assessments/Behavior/Vineland-Adaptive-Behavior-Scales-%7C-Third-Edition/p/100001622
     * **Sample Report**: https://www.pearsonassessments.com/content/dam/school/global/clinical/us/assets/vineland-3/vineland-3-comprehensive-interview-form-sample-report.pdf

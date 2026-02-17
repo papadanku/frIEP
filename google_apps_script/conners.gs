@@ -1,3 +1,4 @@
+
 /** @OnlyCurrentDoc */
 
 function connersMain() {
@@ -5,23 +6,14 @@ function connersMain() {
   const sheetName = spreadsheet.getSheetName();
 
   if (sheetName == "Conners 4 Table") {
-    const rangeArray = [
-      'B18:E23',
-      'B25:E26',
-      'B28:E33'
+    // Process Conners scales
+    const connersRules = [
+      { min: 70, max: Infinity, suffix: "***" },
+      { min: 65, max: 69,       suffix: "**"  },
+      { min: 60, max: 64,       suffix: "*"   }
     ];
 
-    for (const range of rangeArray) {
-      let selectedCells = spreadsheet.getRange(range);
-
-      // Find-Replace Slightly Elevated scores
-      findAndReplace(selectedCells, '(6[0-4])', '$1*');
-
-      // Find-Replace Elevated scores
-      findAndReplace(selectedCells, '(6[5-9])', '$1**');
-
-      // Find-Replace Very Elevated scores
-      findAndReplace(selectedCells, '([7-9]\\d|\\d{3,})', '$1***');
-    }
+    let contentCells = spreadsheet.getRange('B18:E33');
+    findAndReplace(contentCells, connersRules);
   }
 }

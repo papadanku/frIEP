@@ -1,3 +1,4 @@
+
 /** @OnlyCurrentDoc */
 
 function asrsMain() {
@@ -5,24 +6,14 @@ function asrsMain() {
   const sheetName = spreadsheet.getSheetName();
 
   if (sheetName == "ASRS Table") {
-    const rangeArray = [
-      'B18:E18',
-      'B20:E22',
-      'B24:E24',
-      'B26:E33'
+    let asrsCells = spreadsheet.getRange('B18:E33');
+
+    const asrsRules = [
+      { min: 70, max: Infinity, suffix: "***" },
+      { min: 65, max: 69,       suffix: "**"  },
+      { min: 60, max: 64,       suffix: "*"   }
     ];
 
-    for (const range of rangeArray) {
-      let selectedCells = spreadsheet.getRange(range);
-
-      // Find-Replace Slightly Elevated scores
-      findAndReplace(selectedCells, '(6[0-4])', '$1*');
-
-      // Find-Replace Elevated scores
-      findAndReplace(selectedCells, '(6[5-9])', '$1**');
-
-      // Find-Replace Very Elevated scores
-      findAndReplace(selectedCells, '(\\d{3,}|[7-9]\\d)', '$1***');
-    }
+    findAndReplace(asrsCells, asrsRules);
   }
 }

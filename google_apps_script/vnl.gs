@@ -1,3 +1,4 @@
+
 /** @OnlyCurrentDoc */
 
 function vnlMarkScores(spreadsheet, cellRange, moderatelyLowSearch, lowSearch) {
@@ -14,14 +15,32 @@ function vnlMain() {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   const sheetName = spreadsheet.getSheetName();
 
-  if (sheetName == "Vineland 3 · Comprehensive") {
-    // Domain
-    vnlMarkScores(spreadsheet, 'B14:C18', '(7[1-9]|8[0-5])', '(70|[2-6]\\d)');
+  if (sheetName == 'Vineland 3 · Comprehensive') {
+    // Process Composite scores
+    const compositeRules = [
+      { min: 20, max: 70, suffix: '**'  },
+      { min: 71, max: 85, suffix: '*'   }
+    ]
 
-    // Subdomain
-    vnlMarkScores(spreadsheet, 'B20:C32', '(1[0-2])', '(\\d)');
+    let compositeCells = spreadsheet.getRange('B14:C18');
+    findAndReplace(compositeCells, compositeRules);
 
-    // Maladaptive
-    vnlMarkScores(spreadsheet, 'B34:C35', '(20|1[8-9])', '(2[1-4])');
+    // Process Subdomain scores
+    const subdomainRules = [
+      { min: 1,  max: 9,  suffix: '**' },
+      { min: 10, max: 12, suffix: '*'  }
+    ]
+
+    let subdomainCells = spreadsheet.getRange('B20:C32');
+    findAndReplace(subdomainCells, subdomainRules);
+
+    // Process Maladaptive scores
+    const maladaptiveRules = [
+      { min: 21, max: 24, suffix: '**' },
+      { min: 18, max: 20, suffix: '*'  }
+    ];
+
+    let maladaptiveCells = spreadsheet.getRange('B34:C35');
+    findAndReplace(maladaptiveCells, maladaptiveRules);
   }
 }

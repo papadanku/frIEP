@@ -12,7 +12,7 @@ function findAndReplaceCell(cell, rules) {
     let value = parseFloat(cell);
 
     // Safety check: skip if not a number or if cell is empty
-    if (isNaN(value) || cell === "")
+    if (isNaN(value) || cell === '')
     {
       return cell;
     }
@@ -53,7 +53,7 @@ function onOpen() {
   sheets.forEach(sheet => {
     const range = sheet.getDataRange();
     if (range.getNumRows() > 0 && range.getNumColumns() > 0) {
-      range.setVerticalAlignment("middle");
+      range.setVerticalAlignment('middle');
     }
   });
 }
@@ -66,7 +66,7 @@ function onOpen() {
 function onSpreadsheetChange(e) {
   if (e.changeType === 'INSERT_ROW' || e.changeType === 'INSERT_COLUMN') {
     const changedRange = e.range; // This is the range of the newly inserted rows/columns
-    changedRange.setVerticalAlignment("middle");
+    changedRange.setVerticalAlignment('middle');
     Logger.log(`Applied center vertical alignment to newly ${e.changeType === 'INSERT_ROW' ? 'inserted rows' : 'inserted columns'}: ${changedRange.getA1Notation()}`);
   }
 }

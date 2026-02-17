@@ -28,9 +28,16 @@ function eddtMain() {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   const sheetName = spreadsheet.getSheetName();
   const activeSheet = spreadsheet.getActiveSheet();
+  let characteristicScoreRange = '';
 
-  if (sheetName == 'EDDT') {
-    const characteristicScoreRange = 'B26:D30';
-    eddtMarkCharacteristicScores(activeSheet, characteristicScoreRange);
+  switch (sheetName) {
+    case "EDDT":
+      characteristicScoreRange = 'B26:D30';
+      eddtMarkCharacteristicScores(activeSheet, characteristicScoreRange);
+      break;
+    case "EDDT · SR":
+      characteristicScoreRange = 'B22:B27';
+      eddtMarkCharacteristicScores(activeSheet, characteristicScoreRange);
+      break;
   }
 }

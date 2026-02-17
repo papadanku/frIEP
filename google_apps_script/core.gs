@@ -1,11 +1,7 @@
 
 /** @OnlyCurrentDoc */
 
-function findAndReplace(inputRange, rules) {
-  let data = inputRange.getValues();
-
-  // Use map to create the new 2D array in memory
-  let updatedData = data.map(row => row.map(cell => {
+function findAndReplaceCell(cell, rules) {
     let value = parseFloat(cell);
 
     // Safety check: skip if not a number or if cell is empty
@@ -19,6 +15,14 @@ function findAndReplace(inputRange, rules) {
 
     // Return the value with suffix if matched, otherwise original number
     return match ? (value + match.suffix) : value;
+}
+
+function findAndReplace(inputRange, rules) {
+  let data = inputRange.getValues();
+
+  // Use map to create the new 2D array in memory
+  let updatedData = data.map(row => row.map(cell => {
+    return findAndReplaceCell(cell, rules);
   }));
 
   // The ONLY API call to write data

@@ -77,13 +77,7 @@ function eddtMarkAreaScores(spreadsheet, areaRange, type)
     }
 
     return row.map(cell => {
-      const value = parseFloat(cell);
-      if (isNaN(value) || cell === "") {
-        return cell;
-      }
-
-      const match = rules.find(rule => value >= rule.min && value <= rule.max);
-      return match ? (value + match.suffix) : value;
+      return findAndReplaceCell(cell, rules);
     });
   });
 
